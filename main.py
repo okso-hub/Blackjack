@@ -2,6 +2,7 @@ from os import system, name
 from time import sleep
 from random import choice
 from termcolor import colored
+from simple_term_menu import TerminalMenu
 
 
 clear = lambda: system("clear") if name == "posix" else "cls"
@@ -15,7 +16,7 @@ A = "Baustelle"
 
 
 def main():
-    win, lose, draw = False, False, False
+    clear()
 
     all_cards = [2, 2, 2, 2,
           3, 3, 3, 3,
@@ -261,26 +262,48 @@ def main():
 
 
     if (credit - (stake * 2)) < 0:
-        first_choice = int(input("1: Stand, 2: Hit: "))
+        options = ["Stand", "Hit"]
+        index = TerminalMenu(options)
+        first_choice = index.show()
     else:
         if first_player == second_player:
-            first_choice = int(input("1: Stand, 2: Hit, 3: Double, 4: Split: "))
+            options = ["Stand", "Hit", "Double", "Split"]
+            index = TerminalMenu(options)
+            first_choice = index.show()
         else:
-            first_choice = int(input("1: Stand, 2: Hit, 3: Double: "))
+            options = ["Stand", "Hit", "Double"]
+            index = TerminalMenu(options)
+            first_choice = index.show()
 
-    if first_choice == 1:
+    if first_choice == 0:
         stand()
-    elif first_choice == 2:
+    elif first_choice == 1:
         hit()
-    elif first_choice == 3:
+        options = ["Stand", "Hit"]
+        index = TerminalMenu(options)
+        second_choice = index.show()
+
+        if second_choice == 0:
+            stand()
+        elif second_choice == 1:
+            hit()
+            third_choice = index.show()
+
+            if third_choice == 0:
+                stand()
+            elif third_choice == 1:
+                hit()
+            
+
+    elif first_choice == 2:
         double()
-    elif first_choice == 4:
+    elif first_choice == 3:
         split()
 
 
 if __name__ == "__main__":
 
-    buy_in = int(input("Enter your buy in: "))
+    buy_in = int(input("Enter your buy in: $"))
     
     while buy_in <= 0:
         print(f"You cannot take {buy_in} as your buy-in. Enter again.")
